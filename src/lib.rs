@@ -20,13 +20,16 @@ pub unsafe extern "C" fn new_container(s: *const c_char) -> Box<Container> {
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn get_info(c: Box<Container>) -> *const c_char {
-    CString::new(c.s.as_str()).unwrap().into_raw()
+pub unsafe extern "C" fn get_info(c: &Container) -> *const c_char {
+    // println!("s: {}", c.s.as_str());
+    CString::new(c.s.clone().as_str()).unwrap().into_raw()
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn destroy(c: *mut c_char) {
-    let _ = CString::from_raw(c);
+    let _ = unsafe {
+        CString::from_raw(c)
+    };
 }
 
 #[cfg(test)]
