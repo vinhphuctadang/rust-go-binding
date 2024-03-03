@@ -1,6 +1,6 @@
 # Rust -> Go binding
 
-Requires: make, cargo
+Requires: make, cargo, cbindgen
 
 Usage:
 
