@@ -1,0 +1,16 @@
+[package]
+name = "rust-c-binding"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[lib]
+name = "rustcbinding"
+crate-type = ["rlib", "cdylib"]
+
+
+[export]
+item_types = ["enums", "structs", "opaque", "functions", "constants", "typedefs"]
