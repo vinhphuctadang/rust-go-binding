@@ -1,44 +1,66 @@
 use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 
+/*
+    Go with this stupid design
+    Product => {
+        date u64
+        container *Container {
+            product_name String
+            quantity u32
+        }
+    }
+ */
 #[no_mangle]
 pub unsafe extern "C" fn add(left: usize, right: usize) -> usize {
     left + right
 }
 
 pub struct Container {
-    pub s: String
+    pub product_name: String,
+    pub quantity: u32,
+}
+
+pub struct Product {
+    pub date: u64,
+    pub container: Box<Container>,
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn new_container(s: *const c_char) -> Box<Container> {
-    let c_str = CStr::from_ptr(s);
+pub unsafe extern "C" fn new_container(prod_name: *const c_char, quantity: u32) -> Box<Container> {
+    let c_str = CStr::from_ptr(prod_name);
     let container = Container {
-        s: String::from(c_str.to_str().unwrap()),
+        product_name: String::from(c_str.to_str().unwrap()),
+        quantity: quantity,
     };
+    
     Box::new(container)
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn get_info(c: &Container) -> *const c_char {
-    // println!("s: {}", c.s.as_str());
-    CString::new(c.s.clone().as_str()).unwrap().into_raw()
+pub unsafe extern "C" fn get_name(c: &Container) -> *const c_char {
+    CString::new(c.product_name.clone().as_str()).unwrap().into_raw()
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn destroy(c: *mut c_char) {
-    let _ = unsafe {
-        CString::from_raw(c)
-    };
+pub unsafe extern "C" fn destroy(s: *mut c_char) {
+    let _ = CString::from_raw(s);
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[no_mangle]
+pub unsafe extern "C" fn get_quantity(c: &Container) -> u32 {
+    c.quantity
+}
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+#[no_mangle]
+pub unsafe extern "C" fn new_product(date: u64, product_container: Box<Container>) -> Box<Product> {
+    Box::new(Product{
+        date,
+        container: product_container,
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn get_container(product: &Product) -> &Container {
+    &product.container
 }
