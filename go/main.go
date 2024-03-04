@@ -24,4 +24,10 @@ func main() {
 	container = C.get_container(product) //C.add(C.uintptr_t(10), C.uintptr_t(50))
 	productName := C.get_name(container)
 	fmt.Println("This is the name of product after we get from product struct:", C.GoString(productName))
+
+	C.destroy_product(product)
+	container = C.get_container(product)
+	// following line will cause error, why not the above line does ^?
+	productName = C.get_name(container)
+	fmt.Println("This is the name of product after we destory it:", C.GoString(productName))
 }

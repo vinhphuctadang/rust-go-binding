@@ -19,4 +19,6 @@ uint32_t get_quantity(const struct Container *c);
 
 struct Product *new_product(uint64_t date, struct Container *product_container);
 
+void destroy_product(struct Product *product);
+
 const struct Container *get_container(const struct Product *product);

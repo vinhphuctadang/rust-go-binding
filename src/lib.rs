@@ -60,6 +60,11 @@ pub unsafe extern "C" fn new_product(date: u64, product_container: Box<Container
     })
 }
 
+// paste it back to rust and let it deallocate
+#[no_mangle]
+pub unsafe extern "C" fn destroy_product(product: Box<Product>) {
+}
+
 #[no_mangle]
 pub unsafe extern "C" fn get_container(product: &Product) -> &Container {
     &product.container
